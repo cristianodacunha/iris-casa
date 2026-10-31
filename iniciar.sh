@@ -90,15 +90,19 @@ def buscar():
         shutil.rmtree(".nucleo", ignore_errors=True)
         print(f"NUCLEO_SEM_ACESSO ({e})")
         return
-    try:
-        libs = baixar("libs.tar.gz")
-    except Exception as e:  # noqa: BLE001
-        print(f"NUCLEO_SEM_REDE (bibliotecas: {e})")
-        return
+    # No Claude as bibliotecas vêm sob demanda (a ferramenta baixa na primeira vez que precisar): início mais rápido.
+    # Fora dele (Codex), baixa já, porque durante a conversa não há internet.
+    libs = b""
+    if os.environ.get("CLAUDE_CODE_REMOTE") != "true":
+        try:
+            libs = baixar("libs.tar.gz")
+        except Exception as e:  # noqa: BLE001
+            print(f"NUCLEO_SEM_REDE (bibliotecas: {e})")
+            return
     novo = Path(".nucleo.novo")
     shutil.rmtree(novo, ignore_errors=True)
     novo.mkdir()
-    for blob in (cerebro, libs):
+    for blob in (b for b in (cerebro, libs) if b):
         with tarfile.open(fileobj=io.BytesIO(blob)) as tar:
             try:
                 tar.extractall(novo, filter="data")
@@ -108,6 +112,11 @@ def buscar():
     novo.rename(".nucleo")
     versao = (Path(".nucleo/VERSAO").read_text(encoding="utf-8").strip() if Path(".nucleo/VERSAO").exists() else "?")
     print(f"NUCLEO_OK versão {versao}")
+    # Já entrega regras, pessoa, preferências e novidades: a primeira resposta sai sem nenhuma leitura extra.
+    inicio = subprocess.run([sys.executable, ".nucleo/ferramentas/iris.py", "inicio"], capture_output=True, text=True,
+                            timeout=120)
+    if inicio.returncode == 0 and "INÍCIO CARREGADO" in inicio.stdout:
+        print(inicio.stdout.strip())
 
 
 if len(sys.argv) > 1 and sys.argv[1] == "ativar":
