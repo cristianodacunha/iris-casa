@@ -9,3 +9,4 @@ memoria/licoes.md merge=union
 memoria/preferencias.md merge=union
 dados/lembretes.md merge=union
 dados/listas/*.md merge=union
+dados/documentos.jsonl merge=union
