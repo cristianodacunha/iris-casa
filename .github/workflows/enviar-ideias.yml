@@ -3,7 +3,7 @@ name: Iris envia ideias
 on:
   push:
     branches: [main]
-    paths: ["memoria/sugestoes.md", "memoria/licoes.md", "memoria/pessoa.md"]
+    paths: ["memoria/sugestoes.md", "memoria/licoes.md", "memoria/pessoa.md", "memoria/receitas/**"]
   workflow_dispatch:
 permissions:
   contents: write

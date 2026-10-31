@@ -42,11 +42,34 @@ for tipo, nome in (("sugestao", "sugestoes.md"), ("licao", "licoes.md")):
         if marca not in ja and texto.strip():
             itens.append({"tipo": tipo, "titulo": titulo[:200], "texto": texto.strip()[:2000]})
             marcas.append(marca)
+for arq in sorted(Path("memoria/receitas").glob("*.md")):
+    texto = arq.read_text(encoding="utf-8")[:9000]
+    marca = hashlib.sha256(f"habilidade|{arq.name}|{texto}".encode()).hexdigest()[:20]
+    if marca not in ja and texto.strip():
+        titulo = texto.splitlines()[0].lstrip("# ").strip() or arq.stem
+        itens.append({"tipo": "habilidade", "titulo": titulo[:200], "texto": texto})
+        marcas.append(marca)
+
+# Segunda barreira (a primeira é a ferramenta da Iris): nada com dado pessoal, segredo, endereço externo, comando
+# de internet ou instrução de ataque sai daqui. O que for barrado fica marcado para não tentar de novo.
+SUSPEITO = re.compile(
+    r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b|\(?\b\d{2}\)?[\s-]?9?\d{4}[\s-]?\d{4}\b|\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b|"
+    r"\b(?:\d[ -]?){13,19}\b|IRIS-[0-9a-f]{16}|\b(?:gh[pousr]_|github_pat_|sk-|xox[abp]-|AKIA)[A-Za-z0-9_-]{8,}|"
+    r"[A-Za-z0-9+/_-]{48,}|https?://(?!(?:www\.)?github\.com/|raw\.githubusercontent\.com/)[^\s)]+|"
+    r"\b(?:curl|wget|nc|ncat|scp|sftp|ftp)\b|requests\.(?:get|post|put)|urllib\.request|http\.client|socket\.|"
+    r"smtplib|webhook|ignor\w*\s+(?:as\s+|todas\s+as\s+|the\s+|all\s+)?(?:instru\w+|regras|previous|prior|above)|"
+    r"disregard|system\s*prompt|you\s+are\s+now|novas\s+instru\w+|\.nucleo|jailbreak", re.I)
+barradas = [m for item, m in zip(itens, marcas) if SUSPEITO.search(item["titulo"] + "\n" + item["texto"])]
+if barradas:
+    print(f"Barradas pela varredura (não saem): {len(barradas)}")
+    with open(ENVIADAS, "a", encoding="utf-8") as f:
+        f.write("\n".join(barradas) + "\n")
+itens, marcas = [i for i, m in zip(itens, marcas) if m not in barradas], [m for m in marcas if m not in barradas]
 if not itens:
     print("Nenhuma ideia nova.")
     raise SystemExit(0)
 
-itens, marcas = itens[:30], marcas[:30]
+itens, marcas = itens[:10], marcas[:10]   # receitas são maiores: até 10 por envio (o resto vai no próximo)
 ts = int(time.time())
 itens_json = json.dumps(itens, ensure_ascii=False)
 assinatura = hmac.new(chave, f"{ident}.{ts}.{itens_json}".encode(), hashlib.sha256).hexdigest()
