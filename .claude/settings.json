@@ -11,6 +11,39 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'f=\"$CLAUDE_PROJECT_DIR/.nucleo/ferramentas/iris.py\"; [ -f \"$f\" ] && python3 \"$f\" conversa pessoa || true'",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'f=\"$CLAUDE_PROJECT_DIR/.nucleo/ferramentas/iris.py\"; [ -f \"$f\" ] && python3 \"$f\" conversa iris || true'",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'f=\"$CLAUDE_PROJECT_DIR/.nucleo/ferramentas/iris.py\"; [ -f \"$f\" ] && python3 \"$f\" conversa fim || true'",
+            "timeout": 45
+          }
+        ]
+      }
     ]
   }
 }
