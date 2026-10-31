@@ -15,3 +15,4 @@ memoria/sugestoes.md merge=union
 dados/json/*.jsonl merge=union
 dados/arquivo_morto.jsonl merge=union
 memoria/conversas/**/*.md merge=union
+memoria/notas/*.md merge=union
