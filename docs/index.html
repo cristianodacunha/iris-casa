@@ -123,17 +123,12 @@
     <p class="dica so-iphone" hidden>Se abrir o app do GitHub e não aparecer a tela de criar, toque e segure o botão roxo e escolha <b>Abrir em Nova Aba</b>.</p>
   </section>
 
-  <!-- 4. Ativar o acesso -->
+  <!-- 4. Código de ativação -->
   <section class="tela" data-tela="ativar" hidden>
-    <h1>Ative a sua Iris</h1>
-    <p>Mande o seu nome de usuário do GitHub para quem te passou a Iris. É com ele que o seu acesso é liberado.</p>
-    <p class="dica">Onde achar: no GitHub, toque na sua foto (no canto de cima). O nome que aparece embaixo do seu nome é o seu usuário.</p>
-    <label class="campo" for="usuario">Seu usuário do GitHub</label>
-    <input type="text" id="usuario" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="ex.: maria-silva">
-    <a class="botao" id="mandar" target="_blank" rel="noopener" aria-disabled="true">Mandar pelo WhatsApp</a>
-    <p>Em seguida chega um <b>convite por e-mail</b>. Abra e toque em <b>Accept invitation</b> (aceitar), ou use o botão abaixo.</p>
-    <a class="botao leve" id="aceitar" target="_blank" rel="noopener">Aceitar o convite</a>
-    <p class="dica">Se o botão disser que não há convite, ele ainda não foi liberado. Espere um pouquinho e tente de novo.</p>
+    <h1>Peça o seu código de ativação</h1>
+    <p>É ele que liga a sua Iris. Toque no botão para pedir a quem te passou a Iris.</p>
+    <a class="botao" id="pedir" target="_blank" rel="noopener">Pedir o código pelo WhatsApp</a>
+    <p class="dica">O código começa com <b>IRIS-</b>. Guarde a mensagem: na primeira conversa, a Iris vai pedir, e é só copiar e colar.</p>
   </section>
 
   <!-- 5a. Conectar o Claude -->
@@ -201,18 +196,17 @@
 </main>
 
 <script>
-  // Ajuste aqui: o modelo da casa, o cérebro (onde fica o convite) e o WhatsApp do suporte
+  // Ajuste aqui: o dono do modelo da casa e o WhatsApp do suporte
   // (só números, com DDI; vazio = a pessoa escolhe o contato no WhatsApp).
-  const DONO = "ERICO-PROJETO";
+  const DONO = "cristianodacunha";
   const MODELO_CASA = "iris-casa";
-  const NUCLEO = "iris-nucleo";
   const SUPORTE_WHATSAPP = "";
 
   const ORDEM = ["app", "github", "casa", "ativar", "ligar", "conversar", "pronto"];
   const CHAVE = "iris-assistente";
   const ler = () => { try { return JSON.parse(localStorage.getItem(CHAVE)) || {}; } catch (e) { return {}; } };
   const gravar = () => { try { localStorage.setItem(CHAVE, JSON.stringify(estado)); } catch (e) {} };
-  const estado = Object.assign({ tela: "app", app: null, usuario: "" }, ler());
+  const estado = Object.assign({ tela: "app", app: null }, ler());
   const daUrl = new URLSearchParams(location.search).get("app");
   if (daUrl === "claude" || daUrl === "chatgpt") estado.app = daUrl;
   if (!estado.app) estado.tela = "app";
@@ -221,22 +215,9 @@
     template_owner: DONO, template_name: MODELO_CASA, name: "minha-iris",
     description: "Minha Iris", visibility: "private"
   });
-  document.getElementById("aceitar").href = `https://github.com/${DONO}/${NUCLEO}/invitations`;
   if (/iPhone|iPad|iPod/.test(navigator.userAgent)) document.querySelectorAll(".so-iphone").forEach(e => e.hidden = false);
-
-  const campo = document.getElementById("usuario");
-  const mandar = document.getElementById("mandar");
-  function prepararMensagem() {
-    const u = campo.value.trim().replace(/^@/, "").replace(/\s+/g, "");
-    estado.usuario = u; gravar();
-    const ok = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/.test(u);
-    mandar.setAttribute("aria-disabled", ok ? "false" : "true");
-    const texto = `Oi! Quero ativar a minha Iris. Meu usuário do GitHub é: ${u}`;
-    mandar.href = (SUPORTE_WHATSAPP ? `https://wa.me/${SUPORTE_WHATSAPP}` : "https://wa.me/") + "?text=" + encodeURIComponent(texto);
-  }
-  campo.value = estado.usuario || "";
-  campo.addEventListener("input", prepararMensagem);
-  prepararMensagem();
+  document.getElementById("pedir").href = (SUPORTE_WHATSAPP ? `https://wa.me/${SUPORTE_WHATSAPP}` : "https://wa.me/") +
+    "?text=" + encodeURIComponent("Oi! Criei a casa da minha Iris e quero o meu código de ativação.");
 
   const pontos = document.getElementById("pontos");
   ORDEM.slice(0, -1).forEach(() => pontos.appendChild(document.createElement("i")));
