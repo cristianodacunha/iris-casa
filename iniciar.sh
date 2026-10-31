@@ -78,7 +78,11 @@ def buscar():
             print(f"NUCLEO_SEM_REDE (HTTP {e.code})")
         return
     except Exception as e:  # noqa: BLE001 (qualquer falha de rede vira o mesmo aviso)
-        print(f"NUCLEO_SEM_REDE ({e})")
+        if isinstance(getattr(e, "reason", None), FileNotFoundError):   # entrega local (testes): pacote apagado
+            shutil.rmtree(".nucleo", ignore_errors=True)
+            print("NUCLEO_SEM_ACESSO (sem pacote ativo para este código)")
+        else:
+            print(f"NUCLEO_SEM_REDE ({e})")
         return
     try:
         cerebro = abrir(pacote, chave)
