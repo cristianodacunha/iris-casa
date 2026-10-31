@@ -1,9 +1,14 @@
 {
+  "model": "sonnet",
   "hooks": {
     "SessionStart": [
       {
         "hooks": [
-          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/iniciar.sh\"", "timeout": 120 }
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/iniciar.sh\"",
+            "timeout": 120
+          }
         ]
       }
     ]
