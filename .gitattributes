@@ -10,3 +10,5 @@ memoria/preferencias.md merge=union
 dados/lembretes.md merge=union
 dados/listas/*.md merge=union
 dados/documentos.jsonl merge=union
+memoria/.ideias_enviadas merge=union
+memoria/sugestoes.md merge=union

@@ -4,6 +4,7 @@ nome: (a preencher)
 como chamar: (a preencher)
 cidade: (a preencher)
 fuso: America/Sao_Paulo
+enviar ideias: (a perguntar)
 
 ## Sobre a vida dela
 (Fatos que ela contou e que valem lembrar, com data. Nunca invente.)
