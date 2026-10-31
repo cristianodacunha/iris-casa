@@ -9,6 +9,8 @@ JSON no formato pedido. Precisão é tudo: um dígito errado vai parar na planil
 
 - Foto: abra com a ferramenta Read e olhe o documento inteiro, devagar, linha por linha, item por item.
   PDF: use `python3 .nucleo/ferramentas/iris.py ler "<arquivo>"` (texto exato).
+- Use o formato completo que a Iris pedir (documento, emitente com endereço, consumidor, itens, totais com tributos,
+  pagamentos, atendimento, mensagens) e ponha em `extras` TUDO o que estiver impresso e não tiver lugar fixo.
 - Copie cada valor EXATAMENTE como impresso (vírgula, ponto, zeros). Não arredonde, não corrija, não complete.
 - Conte os itens um por um; não junte nem pule linha.
 - O que não der para ler com certeza absoluta: valor `null` e o nome do campo em `"duvidosos"`.

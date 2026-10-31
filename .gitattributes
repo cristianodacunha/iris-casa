@@ -12,3 +12,5 @@ dados/listas/*.md merge=union
 dados/documentos.jsonl merge=union
 memoria/.ideias_enviadas merge=union
 memoria/sugestoes.md merge=union
+dados/json/*.jsonl merge=union
+dados/arquivo_morto.jsonl merge=union

@@ -5,10 +5,12 @@ on:
     branches: [main]
     paths: ["memoria/sugestoes.md", "memoria/licoes.md", "memoria/pessoa.md", "memoria/receitas/**"]
   workflow_dispatch:
+  schedule:
+    - cron: "41 11 * * *"   # reserva: uma vez por dia, caso algo tenha ficado para trás
 permissions:
   contents: write
 concurrency:
-  group: iris-ideias
+  group: iris-juntar
 jobs:
   enviar:
     if: ${{ !github.event.repository.is_template }}

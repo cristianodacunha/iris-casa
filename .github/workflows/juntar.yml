@@ -43,3 +43,15 @@ jobs:
             echo "::error::Não deu para juntar $RAMO sozinho. Abra o pedido de junção (PR) e toque em Merge."
             exit 1
           fi
+
+      # O GitHub não dispara uma regra a partir de outra: o que depende da casa atualizada roda aqui mesmo.
+      - name: Enviar ideias (só se a pessoa deixou)
+        run: python3 .github/enviar_ideias.py || true
+
+      - name: Arquivo morto (documentos com mais de 12 meses saem do download das conversas)
+        run: python3 .github/arquivo_morto.py || true
+
+      - name: Guardar o que mudou
+        run: |
+          git add -A memoria dados arquivos 2>/dev/null || true
+          git diff --cached --quiet || { git commit -q -m "Iris: ideias enviadas e arquivo morto" && git push -q origin main; }
