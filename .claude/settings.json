@@ -1,5 +1,8 @@
 {
   "model": "sonnet",
+  "permissions": {
+    "allow": ["WebSearch", "WebFetch"]
+  },
   "hooks": {
     "SessionStart": [
       {
